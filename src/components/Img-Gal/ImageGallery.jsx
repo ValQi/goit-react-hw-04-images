@@ -1,7 +1,12 @@
-import { ImageGalleryItem } from './ImageGalleryItem';
+import React from 'react';
+import ImageGalleryItem from './ImageGalleryItem';
 import { ImageGallery } from './ImageGallery.styled';
 
-export const ImgGallery = ({ hits }) => {
+const ImgGallery = ({ hits }) => {
+  if (hits.length === 0) {
+    return <p>No images found</p>;
+  }
+
   return (
     <ImageGallery>
       {hits.map(({ id, largeImageURL, webformatURL }) => (
@@ -12,4 +17,7 @@ export const ImgGallery = ({ hits }) => {
         />
       ))}
     </ImageGallery>
-  )};
+  );
+};
+
+export default ImgGallery;

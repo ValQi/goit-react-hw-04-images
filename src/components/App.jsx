@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ImgGallery } from './Img-Gal/ImageGallery';
+import ImgGallery from './Img-Gal/ImageGallery';
 import { Button } from './ButtonFolder/button';
 import { LoaderCont } from './Loader';
 import { Searchbar } from './SearchbarFolder/Searchbar';
@@ -28,11 +28,15 @@ const App = () => {
           `${BASE_URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=${PER_PAGE}`
         );
 
+        if (!response.ok) {
+          throw new Error(`Failed to fetch images. Status: ${response.status}`);
+        }
+
         const data = await response.json();
         setTotalHits(data.totalHits);
         setImages((prevImages) => [...prevImages, ...data.hits]);
       } catch (error) {
-        console.error('Error fetching images:', error);
+        console.error('Error fetching images:', error.message);
       } finally {
         setLoading(false);
       }
@@ -61,7 +65,7 @@ const App = () => {
   return (
     <div>
       <Searchbar onSubmit={handleSearch} />
-      <ImgGallery hits={images} onImageClick={openModal} />
+      <ImgGallery key={query} hits={images} onImageClick={openModal} />
       {loading && <LoaderCont />}
       {images.length < totalHits && !loading && (
         <Button onClick={loadMoreImages} />
